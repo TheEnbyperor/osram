@@ -88,11 +88,18 @@ class Loader extends Component {
 class App extends Component {
     hasFix = false;
     uid = 0;
+    state = {
+        loaded: false
+    };
 
     componentDidMount() {
+        const self = this;
         auth.onAuthStateChanged(function (user) {
             if (user) {
-                this.uid = user.uid;
+                self.uid = user.uid;
+                self.setState({
+                   loaded: true
+                });
             } else {
                 firebase.auth().signInAnonymously().catch(function (error) {
                     // const errorCode = error.code;
@@ -103,6 +110,13 @@ class App extends Component {
     }
 
     render() {
+        let main = null;
+        if (this.state.loaded) {
+            main = <Stalls/>;
+        } else {
+            main = <Loader/>;
+        }
+
         return (
             <div className="App">
                 <LocationUpdater onFix={() => {
@@ -110,7 +124,7 @@ class App extends Component {
                 }} lostFix={() => {
                     this.hasFix = false
                 }}/>
-                <Loader/>
+                {main}
             </div>
         );
     }

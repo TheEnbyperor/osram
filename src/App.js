@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import 'react-mdl/extra/material.js';
-import {Spinner} from 'react-mdl';
+import {Spinner, Snackbar} from 'react-mdl';
 import firebase from 'firebase';
 import 'react-mdl/extra/material.css';
 import './App.css';
@@ -89,7 +89,9 @@ class App extends Component {
     hasFix = false;
     uid = 0;
     state = {
-        loaded: false
+        loaded: false,
+        curMsg: '',
+        isSnackbarActive: false
     };
 
     componentDidMount() {
@@ -98,7 +100,7 @@ class App extends Component {
             if (user) {
                 self.uid = user.uid;
                 self.setState({
-                   loaded: true
+                    loaded: true
                 });
             } else {
                 firebase.auth().signInAnonymously().catch(function (error) {
@@ -109,10 +111,23 @@ class App extends Component {
         });
     }
 
+    showMessage(msg) {
+        this.setState({
+            curMsg: msg,
+            isSnackbarActive: true
+        });
+    }
+
+    handleTimeoutSnackbar() {
+        this.setState({
+            isSnackbarActive: false
+        });
+    }
+
     render() {
         let main = null;
         if (this.state.loaded) {
-            main = <Stalls/>;
+            main = <Stalls showMessage={this.showMessage.bind(this)}/>;
         } else {
             main = <Loader/>;
         }
@@ -125,6 +140,12 @@ class App extends Component {
                     this.hasFix = false
                 }}/>
                 {main}
+                <Snackbar
+                    ref="snackbar"
+                    active={this.state.isSnackbarActive}
+                    onTimeout={this.handleTimeoutSnackbar.bind(this)}>
+                    {this.state.curMsg}
+                </Snackbar>
             </div>
         );
     }

@@ -1,0 +1,17 @@
+.Order h1 {
+    text-align: center;
+    margin: 5px;
+}
+.Order h4 {
+    margin-top: 0;
+}
+.Order .mdl-card__supporting-text {
+    width: 100%;
+}
+.Order .mdl-card {
+    margin-bottom: 10px;
+}
+.Order .mdl-button {
+    margin: 10px auto auto;
+    display: block;
+}

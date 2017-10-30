@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
+import 'react-mdl/extra/material.js';
+import {Spinner} from 'react-mdl';
 import firebase from 'firebase';
-import logo from './logo.svg';
+import 'react-mdl/extra/material.css';
 import './App.css';
+import Stalls from './Stalls';
 
 // Initialize Firebase
 const config = {
@@ -67,6 +70,21 @@ class LocationUpdater extends Component {
     }
 }
 
+class Loader extends Component {
+    render() {
+        return (
+            <div className="Loader">
+                <div className="Loader-inner">
+                    <h1>Bon app a ti</h1>
+                    <div className="Loader-spinner">
+                        <Spinner/>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
 class App extends Component {
     hasFix = false;
     uid = 0;
@@ -92,6 +110,7 @@ class App extends Component {
                 }} lostFix={() => {
                     this.hasFix = false
                 }}/>
+                <Loader/>
             </div>
         );
     }

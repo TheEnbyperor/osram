@@ -18,6 +18,7 @@ const config = {
 firebase.initializeApp(config);
 export const auth = firebase.auth();
 export const database = firebase.database();
+export const messaging = firebase.messaging();
 
 class LocationUpdater extends Component {
     constructor(props) {
@@ -109,6 +110,18 @@ class App extends Component {
                 });
             }
         });
+        messaging.requestPermission()
+            .then(function () {
+                    console.log('Notification permission granted.');
+                }
+            )
+            .catch(
+                function (err) {
+                    console.log('Unable to get permission to notify.', err);
+                }
+            )
+        ;
+
     }
 
     showMessage(msg) {

@@ -16,8 +16,8 @@ const config = {
     messagingSenderId: "683254335656"
 };
 firebase.initializeApp(config);
-const auth = firebase.auth();
-const database = firebase.database();
+export const auth = firebase.auth();
+export const database = firebase.database();
 
 class LocationUpdater extends Component {
     constructor(props) {

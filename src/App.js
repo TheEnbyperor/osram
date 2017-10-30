@@ -13,6 +13,8 @@ const config = {
     messagingSenderId: "683254335656"
 };
 firebase.initializeApp(config);
+const auth = firebase.auth();
+const database = firebase.database();
 
 class LocationUpdater extends Component {
     constructor(props) {
@@ -20,15 +22,31 @@ class LocationUpdater extends Component {
         this.onFix = props.onFix;
         this.lostFix = props.lostFix;
         this.fix = null;
+        this.authed = false;
+        this.uid = 0;
     }
 
     componentDidMount() {
+        auth.onAuthStateChanged((user) => {
+            this.authed = !!user;
+            if (user) {
+                this.uid = user.uid;
+            }
+        });
         this.watchId = navigator.geolocation.watchPosition((fix) => {
             if (this.fix === null) {
                 this.onFix();
             }
             this.fix = fix;
-            console.log(fix);
+            if (this.authed) {
+                database.ref('locations/' + this.uid).set({
+                    coords: {
+                        lat: fix.coords.latitude,
+                        lng: fix.coords.latitude
+                    },
+                    timestamp: fix.timestamp
+                });
+            }
         }, () => {
             if (this.fix !== null) {
                 this.lostFix()
@@ -37,7 +55,7 @@ class LocationUpdater extends Component {
         }, {
             enableHighAccuracy: true,
             maximumAge: 0
-        })
+        });
     }
 
     componentWillUnmount() {
@@ -54,13 +72,13 @@ class App extends Component {
     uid = 0;
 
     componentDidMount() {
-        firebase.auth().onAuthStateChanged(function (user) {
+        auth.onAuthStateChanged(function (user) {
             if (user) {
                 this.uid = user.uid;
             } else {
                 firebase.auth().signInAnonymously().catch(function (error) {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
+                    // const errorCode = error.code;
+                    // const errorMessage = error.message;
                 });
             }
         });
@@ -74,13 +92,6 @@ class App extends Component {
                 }} lostFix={() => {
                     this.hasFix = false
                 }}/>
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <h1 className="App-title">Welcome to React</h1>
-                </header>
-                <p className="App-intro">
-                    To get started, edit <code>src/App.js</code> and save to reload.
-                </p>
             </div>
         );
     }

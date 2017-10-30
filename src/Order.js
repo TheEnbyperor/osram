@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
 import {Card, CardTitle, CardText, DataTable, TableHeader, Button, IconButton} from 'react-mdl';
-import {database} from "./App";
+import {database, auth} from "./App";
 import './Order.css';
 
 export default class Order extends Component {
     constructor(props) {
         super(props);
+        this.uid = 0;
         this.state = {
             name: '...',
             headerImg: '',
             items: [],
             cart: {}
         };
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.uid = user.uid;
+            }
+        });
     }
 
     componentDidMount() {
@@ -81,13 +87,22 @@ export default class Order extends Component {
         if (Object.keys(this.state.cart).length < 1) {
             this.props.showMessage("There must be at least one item in your cart to place an order")
         } else {
+            database.ref('pendingOrders').push({
+               uid: this.uid,
+               cart: this.state.cart
+            }, () => {
+                this.props.showMessage("Order placed, awaiting conformation");
+                this.setState({
+                    cart: {}
+                });
+            });
         }
     }
 
     render() {
         return (
             <div className="Order">
-                <h1>{this.state.name}</h1>
+                <h2><IconButton name="backspace" style={{fontSize: '24px'}} onClick={this.props.onBack}/> {this.state.name}</h2>
                 <Card shadow={0} style={{width: '100%'}}>
                     <CardTitle style={{
                         color: '#fff',

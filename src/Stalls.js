@@ -71,10 +71,17 @@ export default class Stalls extends Component {
         })
     }
 
+    closeStall() {
+        this.setState({
+            ordering: null
+        })
+    }
+
     render() {
         let display = null;
         if (this.state.ordering) {
-            display = <Order id={this.state.ordering} showMessage={this.props.showMessage}/>;
+            display = <Order id={this.state.ordering} showMessage={this.props.showMessage}
+                             onBack={this.closeStall.bind(this)}/>;
         } else {
             let stalls = [<h2 key="a">Stalls</h2>];
             for (let stall in this.state.stalls) {

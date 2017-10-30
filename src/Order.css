@@ -11,7 +11,7 @@
 .Order .mdl-card {
     margin-bottom: 10px;
 }
-.Order .mdl-button {
+.Order .mdl-card .mdl-button {
     margin: 10px auto auto;
     display: block;
 }

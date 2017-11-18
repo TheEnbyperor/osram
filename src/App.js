@@ -103,6 +103,32 @@ class App extends Component {
                 self.setState({
                     loaded: true
                 });
+                messaging.requestPermission()
+                .then(function () {
+                    console.log('Notification permission granted.');
+                    messaging.getToken()
+                        .then(currentToken => {
+                            if (currentToken) {
+                                database.ref('/messagingIds/' + self.uid).set(currentToken);
+                            } else {
+                                console.log('No Instance ID token available. Request permission to generate one.');
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log('An error occurred while retrieving token. ', err);
+                        });
+                    messaging.onTokenRefresh(() => {
+                        messaging.getToken()
+                            .then(currentToken => {
+                                database.ref('/messagingIds/' + self.uid).set(currentToken);
+                            })
+                            .catch(function (err) {
+                                console.log('An error occurred while retrieving token. ', err);
+                            });
+                    })
+                }).catch(function (err) {
+                console.log('Unable to get permission to notify.', err);
+            });
             } else {
                 firebase.auth().signInAnonymously().catch(function (error) {
                     // const errorCode = error.code;
@@ -110,18 +136,9 @@ class App extends Component {
                 });
             }
         });
-        messaging.requestPermission()
-            .then(function () {
-                    console.log('Notification permission granted.');
-                }
-            )
-            .catch(
-                function (err) {
-                    console.log('Unable to get permission to notify.', err);
-                }
-            )
-        ;
-
+        // messaging.onMessage(function (payload) {
+        //     console.log("Message received. ", payload);
+        // });
     }
 
     showMessage(msg) {

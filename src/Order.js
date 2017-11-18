@@ -102,17 +102,18 @@ export default class Order extends Component {
     render() {
         return (
             <div className="Order">
-                <h2><IconButton name="backspace" style={{fontSize: '24px'}} onClick={this.props.onBack}/> {this.state.name}</h2>
+                <h2><IconButton name="backspace" style={{fontSize: '24px'}}
+                                onClick={this.props.onBack}/> {this.state.name}</h2>
                 <Card shadow={0} style={{width: '100%'}}>
                     <CardTitle style={{
                         color: '#fff',
                         height: '176px',
                         background: 'url(' + this.state.headerImg + ') center / cover'
-                    }}/>
+                    }}>
+                        Menu
+                    </CardTitle>
                     <CardText>
-                        <h4>Menu</h4>
                         <DataTable
-                            shadow={0}
                             rows={this.state.items}
                             style={{width: '100%'}}
                         >

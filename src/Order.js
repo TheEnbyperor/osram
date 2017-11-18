@@ -1,27 +1,24 @@
 import React, {Component} from 'react';
-import {Card, CardTitle, CardText, DataTable, TableHeader, Button, IconButton} from 'react-mdl';
+import {Card, CardTitle, CardText, CardActions, DataTable, TableHeader, Button, IconButton} from 'react-mdl';
 import {database, auth} from "./App";
 import './Order.css';
 
 export default class Order extends Component {
-    constructor(props) {
-        super(props);
-        this.uid = 0;
-        this.state = {
-            name: '...',
-            headerImg: '',
-            items: [],
-            cart: {}
-        };
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                this.uid = user.uid;
-            }
-        });
-    }
+    uid = 0;
+    state = {
+        name: '...',
+        headerImg: '',
+        items: [],
+        cart: {}
+    };
 
     componentDidMount() {
         const self = this;
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                self.uid = user.uid;
+            }
+        });
         database.ref('menu/' + this.props.id).on('value', (data) => {
             let items = [];
             Object.keys(data.val()).forEach((val, index) => {

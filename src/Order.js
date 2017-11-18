@@ -75,9 +75,19 @@ export default class Order extends Component {
         Object.keys(this.state.cart).forEach((val, index) => {
             let quantity = this.state.cart[val];
             let item = this.getItem(val);
-            items.push({item: item.item, quantity: quantity, price: item.price*quantity, id: val});
+            items.push({item: item.item, quantity: quantity, price: item.price * quantity, id: val});
         });
         return items;
+    }
+
+    calculateTotal() {
+        let totalPrice = 0;
+        Object.keys(this.state.cart).forEach((val, index) => {
+            let quantity = this.state.cart[val];
+            let item = this.getItem(val);
+            totalPrice += item.price * quantity;
+        });
+        return (totalPrice / 100).toFixed(2);
     }
 
     placeOrder() {
@@ -85,8 +95,9 @@ export default class Order extends Component {
             this.props.showMessage("There must be at least one item in your cart to place an order")
         } else {
             database.ref('pendingOrders').push({
-               uid: this.uid,
-               cart: this.state.cart
+                uid: this.uid,
+                stall: this.props.id,
+                cart: this.state.cart
             }, () => {
                 this.props.showMessage("Order placed, awaiting conformation");
                 this.setState({
@@ -124,23 +135,30 @@ export default class Order extends Component {
                     </CardText>
                 </Card>
                 <Card shadow={0} style={{width: '100%'}}>
+                    <CardTitle style={{
+                        color: "#fff",
+                        background: "rgb(63,81,181)"
+                    }}>
+                        Cart
+                    </CardTitle>
                     <CardText>
-                        <h4>Cart</h4>
                         <DataTable
-                            shadow={0}
                             rows={this.calculateCart()}
                             style={{width: '100%'}}
                         >
                             <TableHeader name="item">Item</TableHeader>
-                            <TableHeader numeric name="quantity">Quantity</TableHeader>
+                            <TableHeader numeric name="quantity">Num</TableHeader>
                             <TableHeader numeric name="price" cellFormatter={(price) => `${(price / 100).toFixed(2)}`}>
                                 Price</TableHeader>
                             <TableHeader name="id" cellFormatter={(id) =>
-                                <IconButton name="remove" colored ripple onClick={this.removeItem.bind(this, id)}>-</IconButton>}>
-                                Remove</TableHeader>
+                                <IconButton name="remove" colored ripple
+                                            onClick={this.removeItem.bind(this, id)}>-</IconButton>}/>
                         </DataTable>
-                        <Button raised colored ripple onClick={this.placeOrder.bind(this)}>Place Order</Button>
+                        Total: £<span>{this.calculateTotal()}</span>
                     </CardText>
+                    <CardActions border>
+                        <Button raised colored ripple onClick={this.placeOrder.bind(this)}>Place Order</Button>
+                    </CardActions>
                 </Card>
             </div>
         )

@@ -46,7 +46,7 @@ class LocationUpdater extends Component {
                 database.ref('locations/' + this.uid).set({
                     coords: {
                         lat: fix.coords.latitude,
-                        lng: fix.coords.latitude
+                        lng: fix.coords.longitude
                     },
                     timestamp: fix.timestamp
                 });

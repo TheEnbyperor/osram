@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/osram.iml" filepath="$PROJECT_DIR$/.idea/osram.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../osram-firebase/.idea/osram-firebase.iml" filepath="$PROJECT_DIR$/../osram-firebase/.idea/osram-firebase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../osram-stall/.idea/osram-stall.iml" filepath="$PROJECT_DIR$/../osram-stall/.idea/osram-stall.iml" />
     </modules>
   </component>
 </project>

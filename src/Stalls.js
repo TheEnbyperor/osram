@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+/* jshint esversion:6 */
+import React, { Component } from 'react';
 import {Card, CardTitle, CardActions, Button} from 'react-mdl';
 import {database} from './App';
 import Order from './Order';

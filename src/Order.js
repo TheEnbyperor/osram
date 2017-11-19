@@ -4,13 +4,16 @@ import {database, auth} from "./App";
 import './Order.css';
 
 export default class Order extends Component {
-    uid = 0;
-    state = {
-        name: '...',
-        headerImg: '',
-        items: [],
-        cart: {}
-    };
+    constructor(props) {
+        super(props);
+        this.uid = 0;
+        this.state = {
+            name: '...',
+            headerImg: '',
+            items: [],
+            cart: {}
+        };
+    }    
 
     componentDidMount() {
         const self = this;
@@ -21,13 +24,15 @@ export default class Order extends Component {
         });
         database.ref('menu/' + this.props.id).on('value', (data) => {
             let items = [];
-            Object.keys(data.val()).forEach((val, index) => {
-                let item = data.val()[val];
-                items.push({item: item.name, price: item.price, id: val});
+            data.forEach(item => {
+                const itemData = item.val();
+                if (itemData.deleted !== true) {
+                    items.push({ item: item.name, price: item.price, id: val });
+                }
+                self.setState({
+                    items: items
+                });
             });
-            self.setState({
-                items: items
-            })
         });
         database.ref('stalls/' + this.props.id).on('value', (data) => {
             self.setState({

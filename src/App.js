@@ -38,9 +38,6 @@ class LocationUpdater extends Component {
             }
         });
         this.watchId = navigator.geolocation.watchPosition((fix) => {
-            if (this.fix === null) {
-                this.onFix();
-            }
             this.fix = fix;
             if (this.authed) {
                 database.ref('locations/' + this.uid).set({
@@ -52,9 +49,6 @@ class LocationUpdater extends Component {
                 });
             }
         }, () => {
-            if (this.fix !== null) {
-                this.lostFix()
-            }
             this.fix = null;
         }, {
             enableHighAccuracy: true,
